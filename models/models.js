@@ -1,0 +1,22 @@
+const mongoose = require('mongoose');
+const _ = require('underscore');
+
+module.exports = (wagner) => {
+  mongoose.Promise = global.Promise;
+  mongoose.connect('mongodb://localhost:27017/alumnos', {
+    useMongoClient: true
+  });
+
+  wagner.factory('db', () => mongoose);
+  const User = require('./user.model');
+  const News = require('./news.model');
+
+  const models = {
+    User,
+    News
+  };
+
+  _.each(models, (v, k) => {
+    wagner.factory(k, () => v);
+  });
+}
